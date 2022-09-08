@@ -33,16 +33,25 @@ class MHRUI():
             text,
         )
 
+    def update_quest(self):
+        self.addstr(0, 0, 'Quest status : ' + self.game.quest.status())
+
+    def update_monsters(self):
+        for monster in self.game.monsters:
+            if monster.id != 0:
+                self.addstr(
+                    2 + monster.index,
+                    0,
+                    f'{monster.index}  {monster.id:4d}  {monster.get_name():25s}  {monster.current_health}/{monster.max_health}  {monster.get_hp():.2f}%'
+                )
+
     def update(self):
         self.stdscr.clear()
         self.stdscr.border()
 
-        self.addstr(0, 0, 'Quest status : ' + self.game.quest.status())
-
+        self.update_quest()
         if self.game.quest.status_code == 2:
-            self.addstr(2, 0, f'#{self.game.monsters[0].id} {self.game.monsters[0].get_monster_name():{20}} {self.game.monsters[0].current_health}/{self.game.monsters[0].max_health}')
-            self.addstr(3, 0, f'#{self.game.monsters[1].id} {self.game.monsters[1].get_monster_name():{20}} {self.game.monsters[1].current_health}/{self.game.monsters[1].max_health}')
-            self.addstr(4, 0, f'#{self.game.monsters[2].id} {self.game.monsters[2].get_monster_name():{20}} {self.game.monsters[2].current_health}/{self.game.monsters[2].max_health}')
+            self.update_monsters()
 
         self.stdscr.refresh()
         time.sleep(0.3)

@@ -119,21 +119,16 @@ class MHRQuest:
 
 class MHRMonster:
     def __init__(self, index):
-        self.pointer = read_ptr(0x140000000, [0x0EE4C410, 0x80, 0x10, 0x20 + 0x8 * index])
-
         self.index          = index
         self.id             = 0
         self.current_health = 0
         self.max_health     = 0
 
-    def get_monster_id(self):
-        return self.id
-
-    def get_monster_name(self):
+    def get_name(self):
         return monster_names[self.id]
 
-    def get_current_health(self):
-        return self.current_health
+    def get_hp(self):
+        return self.current_health / self.max_health * 100
 
     def decode_health(self, value, key):
         decoded = bytearray([0, 0, 0, 0])
@@ -184,7 +179,15 @@ class MHRMonster:
         return struct.unpack('f', decoded)[0]
 
     def update(self):
+        self.pointer = read_ptr(0x140000000, [0x0EE4C410, 0x80, 0x10, 0x20 + 0x8 * self.index])
+
         self.id = read('int32', self.pointer + 0x2C0)
+
+        try:
+            self.get_name()
+        except:
+            self.id = 0
+            return
 
         health_component    = read_ptr(self.pointer    , [0x2F8, 0x48, 0x10, 0x20, 0x10, 0x20])
         encoded_ptr         = read_ptr(health_component, [0x10, 0x18])
