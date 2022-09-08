@@ -1,13 +1,12 @@
 import subprocess
 
 
-class MHRProcess():
-    def get_pid(self):
-        return int(subprocess.check_output(['pgrep', 'MonsterHunterRi']))
+def mhr_pid_lookup():
+    return int(subprocess.check_output(['pgrep', 'MonsterHunterRi']))
 
-    def is_alive(self):
-        try:
-            self.get_pid()
-            return True
-        except:
-            return False
+def mhr_process_is_alive():
+    try:
+        mhr_pid_lookup()
+        return True
+    except:
+        return False

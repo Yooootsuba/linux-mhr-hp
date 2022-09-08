@@ -1,19 +1,23 @@
 from lib.ui import MHRUI
-from lib.memory import MHRMemory
-from lib.process import MHRProcess
+from lib.game import MHRGame
+from lib.process import mhr_pid_lookup, mhr_process_is_alive
 
 
 if __name__ == '__main__':
     try:
-        process = MHRProcess()
-        pid = process.get_pid()
+        pid = mhr_pid_lookup()
     except:
         print('MHR process not found !')
         exit()
 
-    memory = MHRMemory(pid)
-    ui = MHRUI()
+    game = MHRGame()
+    ui   = MHRUI()
 
-    while process.is_alive():
-        game = memory.update()
-        ui.update(game)
+    while mhr_process_is_alive():
+        game.quest.update()
+
+        if game.quest.status_code == 2:
+            for monster in game.monsters:
+                monster.update()
+
+        ui.update()
