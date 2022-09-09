@@ -6,7 +6,7 @@ from lib.game import MHRGame
 
 
 class MHRUI():
-    def __init__(self):
+    def __init__(self, game):
         self.stdscr = curses.initscr()
         self.init_ui()
 
@@ -16,7 +16,7 @@ class MHRUI():
         self.start_x = 4
         self.start_y = 4
 
-        self.game = MHRGame()
+        self.game = game
 
     def __del__(self):
         curses.endwin()
@@ -47,10 +47,10 @@ class MHRUI():
 
     def update(self):
         self.stdscr.clear()
-        self.stdscr.border()
 
+        self.stdscr.border()
         self.update_quest()
-        if self.game.quest.status_code == 2:
+        if self.game.quest.is_in_quest():
             self.update_monsters()
 
         self.stdscr.refresh()

@@ -11,12 +11,12 @@ if __name__ == '__main__':
         exit()
 
     game = MHRGame()
-    ui   = MHRUI()
+    ui   = MHRUI(game)
 
     while mhr_process_is_alive():
         game.quest.update()
 
-        if game.quest.status_code == 2:
+        if game.quest.is_in_quest():
             for monster in game.monsters:
                 monster.update()
 
